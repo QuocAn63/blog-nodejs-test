@@ -1,7 +1,17 @@
+const mongoose = require('mongoose');
+const Course = require('../modal/Course');
+
 class NewsController {
     // [GET] /news
     index(req, res) {
-        res.render('news');
+        Course.find({}, function (err, courses) {
+            if (!err) {
+                res.json(courses);
+            } else {
+                res.status(404).json({ Error: 'ERROR!!!' });
+            }
+        });
+        // res.render('news');
     }
 
     // [GET] /news/:slug

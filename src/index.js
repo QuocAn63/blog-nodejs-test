@@ -2,12 +2,16 @@ const morgan = require('morgan');
 const express = require('express');
 const path = require('path');
 const { engine } = require('express-handlebars');
+
 const app = express();
 const port = 3000;
 const news = require('./app/controllers/NewsController');
 const route = require('./routes');
+const db = require('./config/db');
 
-// app.use(morgan('combined'))
+db.connect();
+
+app.use(morgan('combined'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
