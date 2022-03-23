@@ -9,6 +9,7 @@ const Course = new Schema({
     image: { type: String, maxLength: 255 },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    path: { type: String, maxLength: 255 },
 });
 
 module.exports = mongoose.model('Course', Course);

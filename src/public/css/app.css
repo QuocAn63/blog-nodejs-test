@@ -3,3 +3,6 @@ header {
 
 footer {
   color: red; }
+
+.card__card-item {
+  margin: 24px 0; }
