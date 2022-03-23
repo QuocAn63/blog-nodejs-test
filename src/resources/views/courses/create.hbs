@@ -1,0 +1,22 @@
+<div class="mt-4">
+    <h3>Thêm khoá học</h3>
+    <form method="POST" action="/courses/store">
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên khoá học</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô tả khoá học</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+        <div class="mb-3">
+            <label for="video" class="form-label">Video ID</label>
+            <input type="text" class="form-control" id="video" name="video">
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">Ảnh URL</label>
+            <input type="text" class="form-control" id="image" name="image">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
