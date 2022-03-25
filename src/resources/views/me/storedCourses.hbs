@@ -1,0 +1,61 @@
+<table class="table mt-4">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Created at</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each courses}}
+        <tr>
+            <th scope="row">{{sum @index}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.createdAt}}</td>
+            <td>
+                <a href="/courses/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+                <a href="/" class="btn btn-link text-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{this._id}}">Xoá</a>
+            </td>
+        </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<form method="POST" id="delete-course-form" ></form>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xoá khoá học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có muốn xoá khoá học này không ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-course-button">Xoá</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var exampleModal = document.getElementById('exampleModal')
+  const deleteCourseButton = document.getElementById('delete-course-button')
+  const deleteCourseForm = document.getElementById('delete-course-form')
+
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget
+
+    var courseID = button.getAttribute('data-bs-whatever')
+    deleteCourseButton.onclick = () => {
+      deleteCourseForm.action = '/courses/' + courseID + '?_method=DELETE'
+      deleteCourseForm.submit();
+    }
+})
+</script>

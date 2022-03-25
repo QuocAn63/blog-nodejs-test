@@ -19,11 +19,35 @@ class CoursesController {
     store(req, res, next) {
         const post = new Course(req.body);
 
-        post.save((error) => {
-            if (!error) {
-                res.render('news');
-            }
-        });
+        post.save()
+            .then(() => res.redirect('/'))
+            .catch();
+    }
+
+    edit(req, res, next) {
+        Course.findById(req.params.id)
+            .lean()
+            .then((course) => {
+                console.log(course);
+                res.render('courses/edit', { course });
+            })
+            .catch(next);
+    }
+
+    update(req, res, next) {
+        Course.updateOne({ _id: req.params.id }, req.body)
+            .then(() => {
+                res.redirect('/me/stored/courses');
+            })
+            .catch(next);
+    }
+
+    delete(req, res, next) {
+        Course.deleteOne({ _id: req.params.id })
+            .then(() => {
+                res.redirect('back');
+            })
+            .catch(next);
     }
 }
 

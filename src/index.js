@@ -1,25 +1,28 @@
 const morgan = require('morgan');
 const express = require('express');
 const path = require('path');
+const methodOverride = require('method-override');
 const { engine } = require('express-handlebars');
 
 const app = express();
 const port = 3000;
-const news = require('./app/controllers/NewsController');
 const route = require('./routes');
 const db = require('./config/db');
 
 db.connect();
 
 app.use(morgan('combined'));
-
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 // Template engine
 app.engine(
     'hbs',
     engine({
         extname: '.hbs',
+        helpers: {
+            sum: (a) => a + 1,
+        },
     }),
 );
 app.set('view engine', 'hbs');
