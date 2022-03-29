@@ -4,6 +4,8 @@ const path = require('path');
 const methodOverride = require('method-override');
 const { engine } = require('express-handlebars');
 
+const sortMiddleWares = require('./app/middlewares/SortMiddleWare');
+
 const app = express();
 const port = 3000;
 const route = require('./routes');
@@ -14,6 +16,7 @@ db.connect();
 app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+app.use(sortMiddleWares);
 
 // Template engine
 app.engine(
@@ -22,6 +25,30 @@ app.engine(
         extname: '.hbs',
         helpers: {
             sum: (a) => a + 1,
+            sortable: (field, sort) => {
+                const sortBy = field === sort.by ? sort.order : 'default';
+
+                const icons = {
+                    default: 'oi oi-elevator',
+                    desc: 'oi oi-sort-descending',
+                    asc: 'oi oi-sort-ascending',
+                };
+
+                const orders = {
+                    default: 'desc',
+                    asc: 'desc',
+                    desc: 'asc',
+                };
+
+                const icon = icons[sortBy];
+                const order = orders[sort.order];
+
+                return `
+                    <a href="?_sort&by=${field}&order=${order}">
+                        <span class="${icon}"></span>
+                    </a>
+                `;
+            },
         },
     }),
 );

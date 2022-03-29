@@ -1,0 +1,66 @@
+<div class="mt-4">
+  <h1>Trash Box</h1>
+  <a href="/me/stored/courses">Back to My Courses</a>
+</div>
+
+<table class="table mt-4">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Deleted at</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each courses}}
+        <tr>
+            <th scope="row">{{sum @index}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.deletedAt}}</td>
+            <td>
+                <a href="" class="btn btn-link btn-restore" data-restoreID="{{this._id}}">Restore</a>
+                <a href="/" class="btn btn-link text-danger btn-forcedDelete"  data-forcedDeleteID="{{this._id}}">Permanently delete</a>
+            </td>
+        </tr>
+
+    {{else}}
+    <tr>
+      <td colspan="5" class="text-center">
+        Empty.
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<form method="POST" id="restore-course-form" ></form>
+
+<script>
+  var exampleModal = document.getElementById('exampleModal')
+  const restoreCourseForm = document.getElementById('restore-course-form')
+  const forcedDeleteCourseButton = document.querySelectorAll('.btn-forcedDelete')
+  const restoreCourseButton = document.querySelectorAll('.btn-restore')
+
+  restoreCourseButton.forEach(button => {
+      button.onclick = (e) => {
+        e.preventDefault();
+
+        const courseID = button.dataset.restoreid;
+        restoreCourseForm.action = '/courses/' + courseID + '/restore?_method=PUT'
+        restoreCourseForm.submit()
+      }
+  })
+
+  forcedDeleteCourseButton.forEach(button => {
+    button.onclick = (e) => {
+      e.preventDefault()
+
+      const courseID = button.dataset.forceddeleteid
+      restoreCourseForm.action = '/courses/' + courseID + '/forced?_method=DELETE'
+      restoreCourseForm.submit()
+    }
+  })
+</script>

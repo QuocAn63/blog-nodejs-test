@@ -1,28 +1,69 @@
-<table class="table mt-4">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Title</th>
-      <th scope="col">Description</th>
-      <th scope="col">Created at</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each courses}}
-        <tr>
-            <th scope="row">{{sum @index}}</th>
-            <td>{{this.name}}</td>
-            <td>{{this.description}}</td>
-            <td>{{this.createdAt}}</td>
-            <td>
-                <a href="/courses/{{this._id}}/edit" class="btn btn-link">Sửa</a>
-                <a href="/" class="btn btn-link text-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{this._id}}">Xoá</a>
-            </td>
-        </tr>
-    {{/each}}
-  </tbody>
-</table>
+<div class="mt-4">
+  <h1>My courses</h1>
+  <a href="/me/trash/courses">Recover courses</a>
+  <span>({{#if counted}} {{counted}} {{else}} Empty {{/if}})</span>
+</div>
+
+<form action="/courses/handle-submit-courses" id="handle-submit-form" method="POST">
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">
+          <input type="checkbox" id="checkbox-all"></th>
+        <th scope="col">ID</th>
+        <th scope="col">
+          Title
+          {{{sortable 'name' _sort}}}
+        </th>
+        <th scope="col">
+          Description
+          {{{sortable 'desciption' _sort}}}
+        </th>
+        <th scope="col">
+          Created at
+          {{{sortable 'createdAt' _sort}}}
+        </th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+          <tr>
+              <th>
+                <input type="checkbox" name="coursesID" value="{{this._id}}">
+              </th>
+              <th scope="row">{{sum @index}}</th>
+              <td>{{this.name}}</td>
+              <td>{{this.description}}</td>
+              <td>{{this.createdAt}}</td>
+              <td>
+                  <a href="/courses/{{this._id}}/edit" class="btn btn-link">Edit</a>
+                  <a href="/" class="btn btn-link text-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{this._id}}">Delete</a>
+              </td>
+          </tr>
+
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-center">
+          Chưa có khoá học nào.
+          <a href="/courses/create" class="">Thêm khoá học</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="mt-4">
+    <select class="form-select" aria-label="Default select example" name="action">
+      <option>-- Action --</option>
+      <option value="delete">Delete</option>
+    </select>
+      <a class="btn btn-danger" id="delete-submit-button">Delete</a>
+  </div>
+
+</form>
+
+
 
 <form method="POST" id="delete-course-form" ></form>
 
@@ -48,6 +89,10 @@
   var exampleModal = document.getElementById('exampleModal')
   const deleteCourseButton = document.getElementById('delete-course-button')
   const deleteCourseForm = document.getElementById('delete-course-form')
+  const checkboxAll = document.getElementById('checkbox-all')
+  const coursesCheckbox = document.querySelectorAll('input[name="coursesID"]')
+  const formSubmit = document.getElementById('handle-submit-form')
+  const deleteSubmitButton = document.getElementById('delete-submit-button')
 
   exampleModal.addEventListener('show.bs.modal', function (event) {
     var button = event.relatedTarget
@@ -57,5 +102,25 @@
       deleteCourseForm.action = '/courses/' + courseID + '?_method=DELETE'
       deleteCourseForm.submit();
     }
-})
+  })
+
+  checkboxAll.onchange = (e) => {
+    const isChecked = e.target.checked;
+    
+    coursesCheckbox.forEach( course => { 
+      course.checked = isChecked
+    })
+  }
+
+  coursesCheckbox.forEach( course => {
+    course.onchange = (e) => {
+      const checkedNumber = document.querySelectorAll('input[name="coursesID"]:checked').length
+      const isCheckedAll = coursesCheckbox.length === checkedNumber
+      checkboxAll.checked = isCheckedAll
+    }
+  })
+
+  deleteSubmitButton.onclick = () => {
+    formSubmit.submit()
+  }
 </script>
